@@ -5,7 +5,7 @@ use std::{ffi::CString, fs::File, io::Read, ptr, str};
 pub struct Shader {
     vert: String,
     frag: String,
-    program_id: u32,
+    pub program_id: u32,
 }
 
 impl Shader {
@@ -13,7 +13,7 @@ impl Shader {
         let mut shader = Shader {
             vert: vert.to_string(),
             frag: frag.to_string(),
-            program_id : 0,
+            program_id: 0,
         };
         shader.compile_shader();
         shader
@@ -93,9 +93,75 @@ impl Shader {
         }
     }
 
-    pub fn use_program(&self){
+    pub fn use_program(&self) {
         unsafe {
             UseProgram(self.program_id);
+        }
+    }
+
+    pub fn set_uniform_2fv(&self, name: &str, value: Vec<f32>) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform2fv(location, 1, value.as_ptr());
+        }
+    }
+
+    pub fn set_uniform_3fv(&self, name: &str, value: Vec<f32>) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform3fv(location, 1, value.as_ptr());
+        }
+    }
+
+    pub fn set_uniform_4fv(&self, name: &str, value: Vec<f32>) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform4fv(location, 1, value.as_ptr());
+        }
+    }
+
+    pub fn set_uniform_float(&self, name: &str, value: f32) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform1f(location, value);
+        }
+    }
+
+    pub fn set_uniform_int(&self, name: &str, value: i32) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform1i(location, value);
+        }
+    }
+
+    pub fn set_uniform_bool(&self, name: &str, value: bool) {
+        let location = unsafe {
+            let uniform_name = CString::new(name).unwrap();
+            GetUniformLocation(self.program_id, uniform_name.as_ptr())
+        };
+
+        unsafe {
+            Uniform1i(location, value as i32);
         }
     }
 }
