@@ -22,8 +22,10 @@ fn main() {
 
     let vertices: [f32; 20] = [
         // positions     // textures
-        -0.5, -0.5, 0.0, 0.0, 0.0, 0.5, -0.5, 0.0, 1.0, 0.0, -0.5, 0.5, 0.0, 0.0, 1.0, 0.5, 0.5,
-        0.0, 1.0, 1.0,
+        -0.5, -0.5, 0.0,  0.0, 0.0,
+         0.5, -0.5, 0.0,  1.0, 0.0,
+        -0.5,  0.5, 0.0,  0.0, 1.0,
+         0.5,  0.5, 0.0,  1.0, 1.0,
     ];
 
     let indices: [u32; 6] = [0, 1, 2, 1, 2, 3];
@@ -113,7 +115,7 @@ fn main() {
         GenerateMipmap(TEXTURE_2D);
     }
 
-    let shader = shader::Shader::new("src/shaders/shader.vert", "src/shaders/shader.frag");
+    let shader = shader::Shader::new("src/shaders/frostedglass.vert", "src/shaders/frostedglass.frag");
 
     while !window.should_close() {
         unsafe {
@@ -128,6 +130,9 @@ fn main() {
             ActiveTexture(TEXTURE0);
             BindTexture(TEXTURE_2D, texture_id);
             shader.set_uniform_int("background", 0);
+
+            let blur_radius: f32 = 0.95;
+            shader.set_uniform_float("blur_radius", blur_radius);
 
             BindVertexArray(vao);
             DrawElements(TRIANGLES, 6, UNSIGNED_INT, std::ptr::null());

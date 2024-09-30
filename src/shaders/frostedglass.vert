@@ -7,6 +7,6 @@ out vec2 Texture;
 void main(){
     Texture = aTexCoords;
 
-    vec4 position = vec4(aPos, 1.0);
+    vec4 position = vec4(aPos * 1.5, 1.0) ;
     gl_Position = position;
 }
