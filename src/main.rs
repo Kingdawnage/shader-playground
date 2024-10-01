@@ -14,7 +14,7 @@ fn main() {
     glfw.window_hint(WindowHint::OpenGlProfile(OpenGlProfileHint::Core));
 
     let (mut window, _events) = glfw
-        .create_window(1000, 800, "App", WindowMode::Windowed)
+        .create_window(800, 800, "App", WindowMode::Windowed)
         .expect("Failed to create GLFW window.");
 
     window.make_current();
@@ -28,7 +28,10 @@ fn main() {
          0.5,  0.5, 0.0,  1.0, 1.0,
     ];
 
-    let indices: [u32; 6] = [0, 1, 2, 1, 2, 3];
+    let indices: [u32; 6] = [
+        0, 1, 2,
+        1, 2, 3
+    ];
 
     let mut vao: GLuint = 0;
     let mut vbo: GLuint = 0;
@@ -115,12 +118,16 @@ fn main() {
         GenerateMipmap(TEXTURE_2D);
     }
 
-    let shader = shader::Shader::new("src/shaders/frostedglass.vert", "src/shaders/frostedglass.frag");
+    let shader = shader::Shader::new("src/shaders/noise.vert", "src/shaders/noise.frag");
 
     while !window.should_close() {
         unsafe {
             gl::ClearColor(0.0, 0.0, 0.0, 1.0);
             gl::Clear(gl::DEPTH_BUFFER_BIT | gl::COLOR_BUFFER_BIT);
+
+            let (width, height) = window.get_size();
+            gl::Viewport(0, 0, width, height);
+            let resolution = vec![width as f32, height as f32];
 
             shader.use_program();
             let time = glfw.get_time() as f32;
@@ -133,6 +140,8 @@ fn main() {
 
             let blur_radius: f32 = 0.95;
             shader.set_uniform_float("blur_radius", blur_radius);
+
+            shader.set_uniform_2fv("resolution", resolution);
 
             BindVertexArray(vao);
             DrawElements(TRIANGLES, 6, UNSIGNED_INT, std::ptr::null());
