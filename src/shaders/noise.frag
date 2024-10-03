@@ -31,7 +31,7 @@ void main() {
         d = sin(d * 15.0 + millis) * 0.1;
         d = abs(d);
     // d = smoothstep(0.0, 0.05, d);
-        d = pow(0.001 / d, 1.2);
+        d = pow(0.01 / d, 1.2);
         finalColor += col * d;
     }
 

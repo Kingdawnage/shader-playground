@@ -118,7 +118,7 @@ fn main() {
         GenerateMipmap(TEXTURE_2D);
     }
 
-    let shader = shader::Shader::new("src/shaders/frostedglass.vert", "src/shaders/frostedglass.frag");
+    let shader = shader::Shader::new("src/shaders/noise.vert", "src/shaders/noise.frag");
 
     while !window.should_close() {
         unsafe {
